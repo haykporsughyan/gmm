@@ -1,0 +1,96 @@
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg); /* Rotate as it falls */
+    }
+}
+
+.feather {
+    position: fixed;
+    top: -20px; /* Start just above the viewport */
+    width: 50px; /* Adjust the size of the feather */
+    height: auto; /* Maintain aspect ratio */
+    pointer-events: none; /* Prevent interaction */
+    animation: fall linear forwards; /* Animation for falling */
+    filter: blur(1px); /* Slight blur effect for a soft look */
+    opacity: 0; /* Start invisible */
+}
+
+/* Animation for fading in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Apply fade-in effect */
+.feather {
+    animation: fall linear forwards, fadeIn 0.5s forwards; /* Add fade-in animation */
+}
+
+
+.feather {
+    position: absolute;
+    width: 50px; /* Adjust feather size */
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    from {
+        top: -10%;
+        transform: translateX(0);
+    }
+    to {
+        top: 100%;
+        transform: translateX(30px); /* Small horizontal sway */
+    }
+}
+
+.css-agcnqy-MuiPaper-root-MuiCard-root
+{
+    border-radius: 5% !important;
+}
+
+.css-v30ii0 {
+    border-bottom-left-radius: 80px 80px !important; 
+    border-top-right-radius: 80px 80px !important;
+}
+
+.css-46bh2p-MuiCardContent-root {
+    padding: 2px !important;
+}
+
+.css-eop498-MuiTypography-root {
+    margin: 0;
+    /* font-family: "Roboto", "Helvetica", "Arial", sans-serif; */
+    font-weight: 400;
+    line-height: 2.5;
+    letter-spacing: 0.00938em;
+    text-align: var(--Typography-textAlign);
+    margin-bottom: 16px;
+    color: #2d2d2d !important;
+    font-size: 17px !important;
+}
+
+
+
+.css-agcnqy-MuiPaper-root-MuiCard-root {
+    background-color: #fff;
+    color: rgba(0, 0, 0, 0.87);
+    -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    background-color: #ffeacc !important;
+    border-radius: 8px;
+}
+
+.css-1yljzl5-MuiCardMedia-root {
+    width: 20%;
+}
