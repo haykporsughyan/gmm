@@ -79,7 +79,7 @@ const ModernPage = () => {
                             sx={{
                                 background: 'linear-gradient(to right, #c7a07a, #e2ceb1)',
                                 WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
+                                // WebkitTextFillColor: 'transparent',
                             }}
                         >
                             Սիրելի հյուրեր
@@ -122,27 +122,15 @@ const ModernPage = () => {
 
             {/* Image Upload Section */}
             <Box textAlign="center" mb={4}>
+
                 <Card variant="outlined" sx={{ borderRadius: 2, overflow: 'hidden', backgroundColor: '#e2ceb1' }}>
                     {images.length > 0 ? (
-                        images.map((image, index) => (
-                            <CardMedia
-                                key={index}
-                                component="img"
-                                image={image}
-                                alt={`Uploaded ${index + 1}`}
-                                sx={{
-                                    width: '100%', // Full width for each image
-                                    height: 'auto',
-                                    borderRadius: 2,
-                                    boxShadow: 2,
-                                    marginBottom: 2, // Adds space between images
-                                }}
-                            />
-                        ))
+                        "շնորհակալություն լուսանկարի համար"
                     ) : (
                       ''
                     )}
-
+                    <br />
+                    <br />
                     <Input
                         type="file"
                         accept="image/*"
@@ -177,13 +165,17 @@ const ModernPage = () => {
                 </form>
 
                 <Box mt={2}>
-                    {commentsList.map((c, index) => (
+
+                    {
+                        commentsList.length ? "շնորհակալություն մաղթանքների համար" : ""
+                    }
+                    {/* {commentsList.map((c, index) => (
                         <Card key={index} variant="outlined" sx={{ marginBottom: 1, backgroundColor: '#fdfce8' }}>
                             <CardContent>
                                 <Typography variant="body2">{c}</Typography>
                             </CardContent>
                         </Card>
-                    ))}
+                    ))} */}
                 </Box>
             </Card>
         </Container>
