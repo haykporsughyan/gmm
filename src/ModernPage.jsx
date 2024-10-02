@@ -7,7 +7,6 @@ import {
     TextField,
     Card,
     CardContent,
-    CardMedia,
     Input,
     styled,
 } from '@mui/material';
@@ -28,19 +27,48 @@ const ModernPage = () => {
     const [images, setImages] = useState([]); // State to hold multiple images
     const [comment, setComment] = useState('');
     const [commentsList, setCommentsList] = useState([]);
+    const [uploadedImagePaths, setUploadedImagePaths] = useState([]); // For storing uploaded image paths
 
     // Handle multiple image uploads
-    const handleImageUpload = (event) => {
+    const handleImageUpload = async (event) => {
         const files = Array.from(event.target.files);
-        const newImages = files.map((file) => URL.createObjectURL(file));
-        setImages((prevImages) => [...prevImages, ...newImages]); // Append new images
+        const formData = new FormData();
+        files.forEach((file) => formData.append('photos', file)); // Append multiple files
+
+        try {
+            const response = await fetch('https://gmtt.dooors.co/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+            if (data.message) {
+                alert(data.message);
+            }
+
+            // Store image URLs or paths from server in state
+            setUploadedImagePaths(data.imageUrls || []);
+        } catch (error) {
+            console.error('Error uploading images:', error);
+        }
     };
 
-    const handleCommentSubmit = (event) => {
+    const handleCommentSubmit = async (event) => {
         event.preventDefault();
         if (comment.trim()) {
-            setCommentsList([...commentsList, comment]);
-            setComment('');
+            try {
+                const response = await fetch('http://localhost:5000/api/comments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ comment }), // Send comment as JSON
+                });
+
+                const data = await response.json();
+                setCommentsList([...commentsList, comment]); // Append new comment to list
+                setComment(''); // Reset the comment input
+            } catch (error) {
+                console.error('Error submitting comment:', error);
+            }
         }
     };
 
@@ -56,7 +84,7 @@ const ModernPage = () => {
 
         setTimeout(() => {
             feather.remove();
-        }, 8000); 
+        }, 8000);
     };
 
     useEffect(() => {
@@ -64,7 +92,7 @@ const ModernPage = () => {
             createFeather();
         }, 300);
 
-        return () => clearInterval(interval); 
+        return () => clearInterval(interval);
     }, []);
 
     return (
@@ -79,7 +107,6 @@ const ModernPage = () => {
                             sx={{
                                 background: 'linear-gradient(to right, #c7a07a, #e2ceb1)',
                                 WebkitBackgroundClip: 'text',
-                                // WebkitTextFillColor: 'transparent',
                             }}
                         >
                             Սիրելի հյուրեր
@@ -122,13 +149,10 @@ const ModernPage = () => {
 
             {/* Image Upload Section */}
             <Box textAlign="center" mb={4}>
-
                 <Card variant="outlined" sx={{ borderRadius: 2, overflow: 'hidden', backgroundColor: '#e2ceb1' }}>
-                    {images.length > 0 ? (
-                        "շնորհակալություն լուսանկարի համար"
-                    ) : (
-                      ''
-                    )}
+                    {images.length > 0
+                        ? 'շնորհակալություն լուսանկարի համար'
+                        : ''}
                     <br />
                     <br />
                     <Input
@@ -140,7 +164,7 @@ const ModernPage = () => {
                         id="upload-button" // Link to the UploadButton
                     />
                     <UploadButton variant="contained" component="label" htmlFor="upload-button">
-                    Ներբեռնել նկար
+                        Ներբեռնել նկար
                     </UploadButton>
                 </Card>
             </Box>
@@ -160,22 +184,12 @@ const ModernPage = () => {
                         sx={{ mb: 2 }}
                     />
                     <Button variant="contained" color="primary" type="submit">
-                    Կիսվել
+                        Կիսվել
                     </Button>
                 </form>
 
                 <Box mt={2}>
-
-                    {
-                        commentsList.length ? "շնորհակալություն մաղթանքների համար" : ""
-                    }
-                    {/* {commentsList.map((c, index) => (
-                        <Card key={index} variant="outlined" sx={{ marginBottom: 1, backgroundColor: '#fdfce8' }}>
-                            <CardContent>
-                                <Typography variant="body2">{c}</Typography>
-                            </CardContent>
-                        </Card>
-                    ))} */}
+                    {commentsList.length ? 'շնորհակալություն մաղթանքների համար' : ''}
                 </Box>
             </Card>
         </Container>
