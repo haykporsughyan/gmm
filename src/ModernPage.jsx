@@ -13,11 +13,14 @@ import {
 import featherImage from './feather.png'; // Import your feather image
 import mainImage from './first.jpeg'; // Import your main image
 import './ModernPage.css';
+import axios from 'axios';
 
-// Styled upload button
+// Styled upload button with larger size
 const UploadButton = styled(Button)(({ theme }) => ({
     backgroundColor: '#c7a07a',
     color: '#fff',
+    fontSize: '18px', // Increase font size
+    padding: '12px 24px', // Increase padding
     '&:hover': {
         backgroundColor: '#a57a4e',
     },
@@ -28,28 +31,17 @@ const ModernPage = () => {
     const [comment, setComment] = useState('');
     const [commentsList, setCommentsList] = useState([]);
     const [uploadedImagePaths, setUploadedImagePaths] = useState([]); // For storing uploaded image paths
+    const [file, setFile] = useState();
+    const [previewImage, setPreviewImage] = useState(null); // State for previewing uploaded image
 
     // Handle multiple image uploads
     const handleImageUpload = async (event) => {
         const files = Array.from(event.target.files);
-        const formData = new FormData();
-        files.forEach((file) => formData.append('photo', file)); // Append multiple files
+        setFile(files[0]);
 
-        try {
-            const response = await fetch('http://localhost:5000/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-
-            const data = await response.json();
-            if (data.message) {
-                alert(data.message);
-            }
-
-            // Store image URLs or paths from server in state
-            setUploadedImagePaths(data.imageUrls || []);
-        } catch (error) {
-            console.error('Error uploading images:', error);
+        // Set preview image
+        if (files[0]) {
+            setPreviewImage(URL.createObjectURL(files[0]));
         }
     };
 
@@ -57,13 +49,18 @@ const ModernPage = () => {
         event.preventDefault();
         if (comment.trim()) {
             try {
-                const response = await fetch('http://localhost:5000/api/comments', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ comment }), // Send comment as JSON
-                });
+                const formData = new FormData();
+                formData.append('photo', file);
+                formData.append('message', comment);
+                const response = await axios.post('https://gmtt.dooors.co/api/upload', formData);
 
-                const data = await response.json();
+                const data = response.data;
+                if (data.message) {
+                    alert('շնորհակալություն մեր օրը հիշարժան դարձնելու համար');
+                }
+
+                // Store image URLs or paths from server in state
+                setUploadedImagePaths(data.imageUrls || []);
                 setCommentsList([...commentsList, comment]); // Append new comment to list
                 setComment(''); // Reset the comment input
             } catch (error) {
@@ -150,11 +147,28 @@ const ModernPage = () => {
             {/* Image Upload Section */}
             <Box textAlign="center" mb={4}>
                 <Card variant="outlined" sx={{ borderRadius: 2, overflow: 'hidden', backgroundColor: '#e2ceb1' }}>
-                    {images.length > 0
-                        ? 'շնորհակալություն լուսանկարի համար'
-                        : ''}
-                    <br />
-                    <br />
+                    {previewImage ? (
+                        <>
+                            <Typography variant="body2" sx={{ color: '#5b4e41', mb: 2 }}>
+                                Շնորհակալություն լուսանկարի համար
+                            </Typography>
+                            {/* Display the uploaded image preview */}
+                            <Box
+                                component="img"
+                                src={previewImage}
+                                sx={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: 1,
+                                    boxShadow: 2,
+                                    marginBottom: 2,
+                                }}
+                                alt="Uploaded preview"
+                            />
+                        </>
+                    ) : (
+                        ''
+                    )}
                     <Input
                         type="file"
                         accept="image/*"
@@ -189,7 +203,7 @@ const ModernPage = () => {
                 </form>
 
                 <Box mt={2}>
-                    {commentsList.length ? 'շնորհակալություն մաղթանքների համար' : ''}
+                    {commentsList.length ? 'Շնորհակալություն մաղթանքների համար' : ''}
                 </Box>
             </Card>
         </Container>
