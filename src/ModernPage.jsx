@@ -33,7 +33,6 @@ const ModernPage = () => {
     const [uploadedImagePaths, setUploadedImagePaths] = useState([]); // For storing uploaded image paths
     const [file, setFile] = useState();
     const [previewImage, setPreviewImage] = useState(null); // State for previewing uploaded image
-
     // Handle multiple image uploads
     const handleImageUpload = async (event) => {
         const files = Array.from(event.target.files);
@@ -57,6 +56,7 @@ const ModernPage = () => {
                 const data = response.data;
                 if (data.message) {
                     alert('շնորհակալություն մեր օրը հիշարժան դարձնելու համար');
+                    window.location.reload();
                 }
 
                 // Store image URLs or paths from server in state
